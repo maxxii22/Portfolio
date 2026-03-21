@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fix stretched viewport background on large screens */
+html,
+body,
+#root {
+    min-height: 100%;
+    margin: 0;
+    background-color: #020617;
+    color: #e2e8f0;
+}
+
+body {
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
