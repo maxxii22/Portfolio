@@ -3,14 +3,12 @@ import {
   Github,
   Linkedin,
   Mail,
-  ExternalLink,
   Terminal,
   Cpu,
   Database,
   Globe,
   Sparkles,
   Loader2,
-  ChevronRight,
   Code,
   User,
   Menu,
@@ -18,14 +16,13 @@ import {
 } from 'lucide-react';
 
 // --- Configuration ---
-const apiKey = process.env.REACT_APP_GEMINI_API_KEY || "";
-const GEN_MODEL = process.env.REACT_APP_GEMINI_MODEL || "gemini-1.5-flash";
+const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
+const GEN_MODEL = process.env.REACT_APP_GEMINI_MODEL || "gemini-1.5-pro-latest";
 const USER_EMAIL = "eakuma519@gmail.com";
 const GITHUB_URL = "https://github.com/maxxii22";
 const LINKEDIN_URL = "https://www.linkedin.com/in/emmanuel-akuma-31a922350/";
 
 const App = () => {
-  const [activeTab, setActiveTab] = useState('home');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -51,44 +48,80 @@ const App = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const getAbortTimeout = (controller) =>
+    setTimeout(() => controller.abort(), 10000);
+
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
   const callGemini = async (prompt) => {
     if (!apiKey) {
       throw new Error('Missing API key. Set REACT_APP_GEMINI_API_KEY in your environment.');
     }
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEN_MODEL}:generateContent?key=${apiKey}`;
+    const endpoints = [
+      `https://generativelanguage.googleapis.com/v1/models/${GEN_MODEL}:generateText?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta2/models/${GEN_MODEL}:generateText?key=${apiKey}`
+    ];
+
     const payload = {
-      contents: [{ parts: [{ text: prompt }] }],
-      systemInstruction: { parts: [{ text: "You are a senior technical architect explaining low-level Python concepts to a recruiter." }] }
+      prompt: {
+        text: `You are a senior technical architect explaining low-level Python concepts to a recruiter.\n\n${prompt}`
+      },
+      temperature: 0.2,
+      maxOutputTokens: 512,
+      candidateCount: 1,
+      topP: 0.95,
+      topK: 40
     };
 
-    let delay = 1000;
-    for (let i = 0; i < 5; i++) {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          signal: controller.signal
-        });
-        clearTimeout(timeoutId);
+    let lastError = null;
+    for (const endpoint of endpoints) {
+      let delay = 1000;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const controller = new AbortController();
+        const timeoutId = getAbortTimeout(controller);
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
 
-        if (!response.ok) {
-          const errorText = await response.text().catch(() => 'unknown error');
-          throw new Error(`API error ${response.status}: ${errorText}`);
+          if (response.status === 404) {
+            lastError = new Error(`API error 404: endpoint not found (${endpoint})`);
+            break; // try next endpoint
+          }
+
+          if (!response.ok) {
+            const errorText = await response.text().catch(() => 'unknown error');
+            throw new Error(`API error ${response.status}: ${errorText}`);
+          }
+
+          const data = await response.json();
+          return data.outputText ||
+            data.candidates?.[0]?.output ||
+            data.output?.[0]?.content?.[0]?.text ||
+            data.candidates?.[0]?.content?.parts?.[0]?.text ||
+            'No explanation returned';
+        } catch (e) {
+          clearTimeout(timeoutId);
+          lastError = e;
+          if (attempt === 2) break;
+          await wait(delay);
+          delay *= 2;
         }
-
-        const data = await response.json();
-        return data.candidates?.[0]?.content?.parts?.[0]?.text;
-      } catch (e) {
-        clearTimeout(timeoutId);
-        if (i === 4) throw e;
-        await new Promise(r => setTimeout(r, delay));
-        delay *= 2;
+      }
+      if (lastError && lastError.message.includes('endpoint not found')) {
+        continue; // endpoint missing; try next one
+      }
+      if (lastError && !lastError.message.includes('endpoint not found')) {
+        throw lastError;
       }
     }
+
+    throw lastError || new Error('Gemini API request failed');
   };
 
   const explainLogic = async () => {
