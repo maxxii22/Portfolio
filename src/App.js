@@ -141,7 +141,7 @@ const App = () => {
   ];
 
   const SectionHeading = ({ children }) => (
-    <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
+    <h2 className="text-2xl sm:text-3xl font-bold mb-8 flex items-center gap-3">
       <span className="w-8 h-1 bg-blue-500 rounded-full inline-block"></span>
       {children}
     </h2>
@@ -151,7 +151,7 @@ const App = () => {
     <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-blue-500/30 font-sans">
       {/* Navbar */}
       <nav className={`fixed top-0 w-full z-50 transition-all ${scrolled ? 'bg-slate-950/90 backdrop-blur-md border-b border-slate-800 py-4' : 'py-6'}`}>
-        <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex justify-between items-center gap-4">
           <div className="text-xl font-black tracking-tighter text-blue-500">E.AKUMA</div>
           <div className="hidden md:flex gap-8 text-sm font-medium text-slate-400">
             {NAV_ITEMS.map((item) => (
@@ -186,7 +186,7 @@ const App = () => {
       </nav>
       {isMenuOpen && (
         <div className="md:hidden bg-slate-950/95 border-b border-slate-800 backdrop-blur-sm py-4">
-          <div className="max-w-6xl mx-auto px-6 flex flex-col gap-3">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col gap-3">
             {NAV_ITEMS.map((item) => (
               item.type === 'link' ? (
                 <a
@@ -218,18 +218,18 @@ const App = () => {
       )}
 
       {/* Hero */}
-      <section id="home" className="pt-32 pb-20 px-6 max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-        <div>
+      <section id="home" className="pt-32 pb-20 px-4 sm:px-6 max-w-6xl mx-auto grid lg:grid-cols-2 gap-10 sm:gap-16 items-center">
+        <div className="min-w-0">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold mb-6">
             <Cpu size={14} /> SYSTEMS ARCHITECT
           </div>
-          <h1 className="text-6xl md:text-8xl font-black tracking-tight mb-6">
+          <h1 className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tight mb-6 break-words">
             Emmanuel <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-400">Akuma</span>
           </h1>
-          <p className="text-slate-400 text-xl max-w-lg mb-8 leading-relaxed">
+          <p className="text-slate-400 text-lg sm:text-xl max-w-lg mb-8 leading-relaxed">
             Engineering high-performance distributed systems and full-stack applications with a focus on CPython internals and AI integration.
           </p>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-3 sm:gap-4">
             <a href={GITHUB_URL} aria-label="GitHub profile" className="p-4 bg-slate-900 border border-slate-800 rounded-2xl hover:bg-slate-800 transition-all">
               <Github />
             </a>
@@ -242,10 +242,10 @@ const App = () => {
           </div>
         </div>
 
-        <div className="relative group">
+        <div className="relative group min-w-0">
           <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-          <div className="relative bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-2xl">
-            <div className="flex justify-between items-center mb-6">
+          <div className="relative bg-slate-900 border border-slate-800 p-5 sm:p-8 rounded-3xl shadow-2xl overflow-hidden">
+            <div className="flex flex-wrap justify-between items-center gap-3 mb-6">
               <div className="flex gap-2">
                 <div className="w-3 h-3 rounded-full bg-red-500/50"></div>
                 <div className="w-3 h-3 rounded-full bg-yellow-500/50"></div>
@@ -261,7 +261,7 @@ const App = () => {
                 Explain Code
               </button>
             </div>
-            <pre className="text-sm font-mono text-blue-300 leading-relaxed overflow-x-auto">
+            <pre className="max-w-full overflow-x-auto whitespace-pre-wrap break-words text-xs sm:text-sm font-mono text-blue-300 leading-relaxed">
               <code>{pythonSnippet}</code>
             </pre>
             {explanation && (
@@ -275,16 +275,16 @@ const App = () => {
       </section>
 
       {/* Projects */}
-      <section id="projects" className="py-24 px-6 max-w-6xl mx-auto">
+      <section id="projects" className="py-24 px-4 sm:px-6 max-w-6xl mx-auto">
         <SectionHeading>Featured Projects</SectionHeading>
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
           {projects.map((p) => (
-            <div key={p.id} className="p-8 bg-slate-900/50 border border-slate-800 rounded-3xl hover:border-blue-500/50 transition-all group">
-              <div className="flex items-start justify-between gap-4 mb-6">
+            <div key={p.id} className="min-w-0 p-6 sm:p-8 bg-slate-900/50 border border-slate-800 rounded-3xl hover:border-blue-500/50 transition-all group">
+              <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
                 <div className="w-12 h-12 bg-blue-500/10 flex items-center justify-center rounded-xl text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-all">
                   <Terminal size={24} />
                 </div>
-                <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] ${p.status === 'Completed Project' ? 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-300 border border-amber-500/20'}`}>
+                <span className={`max-w-full px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] ${p.status === 'Completed Project' ? 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-300 border border-amber-500/20'}`}>
                   {p.status}
                 </span>
               </div>
@@ -319,13 +319,13 @@ const App = () => {
 
       {/* About */}
       <section id="about" className="py-24 bg-slate-900/30">
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-          <div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-10 sm:gap-16 items-center">
+          <div className="min-w-0">
             <SectionHeading>Technical Expertise</SectionHeading>
-            <p className="text-slate-400 text-lg leading-relaxed mb-6">
+            <p className="text-slate-400 text-base sm:text-lg leading-relaxed mb-6">
               I specialize in bridging the gap between high-level application logic and low-level system performance. My work often involves optimizing Python environments where standard threading isn't enough.
             </p>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
                 { icon: <Code />, text: "React & Next.js" },
                 { icon: <Database />, text: "Redis & PostgreSQL" },
@@ -339,8 +339,8 @@ const App = () => {
               ))}
             </div>
           </div>
-          <div className="flex justify-center">
-            <div className="w-72 h-72 bg-slate-800 rounded-3xl border border-slate-700 flex items-center justify-center">
+          <div className="flex justify-center min-w-0">
+            <div className="w-full max-w-[18rem] aspect-square bg-slate-800 rounded-3xl border border-slate-700 flex items-center justify-center">
               <User size={120} className="text-slate-600" role="img" aria-label="User avatar placeholder" />
             </div>
           </div>
@@ -348,10 +348,10 @@ const App = () => {
       </section>
 
       {/* CV */}
-      <section id="cv" className="py-24 px-6 max-w-6xl mx-auto">
+      <section id="cv" className="py-24 px-4 sm:px-6 max-w-6xl mx-auto">
         <SectionHeading>Curriculum Vitae</SectionHeading>
-        <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-8">
-          <div className="p-8 bg-slate-900/60 border border-slate-800 rounded-3xl">
+        <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-6 sm:gap-8">
+          <div className="min-w-0 p-6 sm:p-8 bg-slate-900/60 border border-slate-800 rounded-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-bold uppercase tracking-[0.2em] mb-5">
               <FileText size={14} />
               CV Snapshot
@@ -369,7 +369,7 @@ const App = () => {
             </div>
           </div>
 
-          <div className="p-8 bg-slate-900/40 border border-slate-800 rounded-3xl flex flex-col justify-between">
+          <div className="min-w-0 p-6 sm:p-8 bg-slate-900/40 border border-slate-800 rounded-3xl flex flex-col justify-between">
             <div>
               <div className="text-sm font-bold uppercase tracking-[0.2em] text-slate-500 mb-4">Availability</div>
               <p className="text-slate-300 leading-relaxed mb-6">
@@ -400,9 +400,9 @@ const App = () => {
       </section>
 
       {/* Footer */}
-      <footer id="contact" className="py-20 px-6 border-t border-slate-900">
+      <footer id="contact" className="py-20 px-4 sm:px-6 border-t border-slate-900">
         <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-8">Ready to build something <span className="text-blue-500 underline decoration-2 underline-offset-8">scalable?</span></h2>
+          <h2 className="text-3xl sm:text-4xl font-bold mb-8">Ready to build something <span className="text-blue-500 underline decoration-2 underline-offset-8">scalable?</span></h2>
           <div className="flex justify-center gap-6 mb-12">
             <a href={GITHUB_URL} aria-label="GitHub profile" className="text-slate-400 hover:text-white transition-colors"><Github size={28} /></a>
             <a href={LINKEDIN_URL} aria-label="LinkedIn profile" className="text-slate-400 hover:text-white transition-colors"><Linkedin size={28} /></a>
