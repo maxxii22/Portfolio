@@ -1,52 +1,55 @@
-# Emmanuel Akuma — Systems Architect Portfolio
+# Emmanuel Akuma Portfolio
 
-A high-performance, modern portfolio showcasing expertise in distributed systems, CPython internals, and AI-integrated applications. Built with a focus on performance, clean architecture, and interactive technical presentation.
+A React portfolio for showcasing systems engineering work, with an AI-assisted code explanation panel powered through a server-side Gemini proxy.
 
----
+## Stack
 
-## 🚀 Overview
+- React with Create React App
+- Tailwind CSS via PostCSS
+- Lucide React icons
+- Vercel-style `api/` function for Gemini requests
 
-This project is a personal portfolio designed to demonstrate advanced engineering capabilities across frontend, backend, and systems-level programming.
+## Local Setup
 
-It combines:
-- A visually refined UI
-- Interactive AI-powered features
-- Strong emphasis on performance engineering concepts
+1. Install dependencies:
 
----
+```bash
+npm install
+```
 
-## 🧠 Key Features
+2. Create a local `.env` file from `.env.example`.
 
-- **Interactive Code Explanation**
-  - AI-powered breakdown of Python concurrency logic and GIL optimization
+3. Add your server-side Gemini key:
 
-- **Modern UI/UX**
-  - Fully responsive design
-  - Clean, minimal, developer-focused interface
+```env
+GEMINI_API_KEY=your_key_here
+```
 
-- **Systems-Focused Presentation**
-  - Highlights low-level Python expertise and distributed system design
+4. Optional settings:
 
-- **Scalable Architecture**
-  - Modular React structure for maintainability and extensibility
+```env
+GEMINI_MODEL=gemini-1.5-flash-latest
+REACT_APP_API_BASE_URL=
+```
 
----
+`REACT_APP_API_BASE_URL` is only needed when your frontend is talking to a separately hosted API.
 
-## 🛠 Tech Stack
+## Running The App
 
-### Frontend
-- React
-- Tailwind CSS
-- Lucide Icons
+- `npm start` starts the CRA frontend.
+- `npm test -- --watchAll=false` runs the test suite once.
+- `npm run build` creates the production bundle.
 
-### Backend / AI Integration
-- Google Gemini API
+The AI explanation feature expects a server that serves `/api/explain`. In production, that fits a Vercel-style deployment. If you run only `npm start`, set `REACT_APP_API_BASE_URL` to a deployed backend or run the frontend in an environment that also serves the `api/` directory.
 
-### Systems & Concepts
-- CPython Internals
-- Multiprocessing & Concurrency
-- Distributed Systems Design
+## Project Structure
 
----
+- `src/App.js`: portfolio UI and client-side request to `/api/explain`
+- `src/index.js`: React entry point
+- `api/explain.js`: server-side Gemini proxy
+- `src/App.test.js`: smoke test for the core landing page UI
 
-## 📂 Project Structure
+## Notes
+
+- Gemini credentials should stay server-side in `GEMINI_API_KEY`.
+- The frontend no longer requires a `REACT_APP_GEMINI_API_KEY`.
